@@ -12,10 +12,9 @@ import java.time.LocalDateTime;
 public class ContactoDTO {
     private Long id;
     private String nombre;
-    private String apellido;
+    private String numero;
     private String email;
-    private String telefono;
-    private String direccion;
+    private String provincia;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
 }

@@ -28,20 +28,18 @@ class ContactoServiceTest {
     @Test
     void crearContactoExitoso() {
         CrearContactoDTO dto = CrearContactoDTO.builder()
-                .nombre("Juan")
-                .apellido("Pérez")
+                .nombre("Juan Pérez")
+                .numero("+34 600 000 000")
                 .email("juan.perez@ejemplo.com")
-                .telefono("+34 600 000 000")
-                .direccion("Calle Test 1")
+                .provincia("Madrid")
                 .build();
 
         Contacto contactoGuardado = Contacto.builder()
                 .id(1L)
-                .nombre("Juan")
-                .apellido("Pérez")
+                .nombre("Juan Pérez")
+                .numero("+34 600 000 000")
                 .email("juan.perez@ejemplo.com")
-                .telefono("+34 600 000 000")
-                .direccion("Calle Test 1")
+                .provincia("Madrid")
                 .build();
 
         when(contactoRepository.existsByEmail(dto.getEmail())).thenReturn(false);
@@ -51,16 +49,18 @@ class ContactoServiceTest {
 
         assertNotNull(resultado);
         assertEquals(1L, resultado.getId());
-        assertEquals("Juan", resultado.getNombre());
+        assertEquals("Juan Pérez", resultado.getNombre());
+        assertEquals("Madrid", resultado.getProvincia());
         verify(contactoRepository, times(1)).save(any(Contacto.class));
     }
 
     @Test
     void crearContactoEmailDuplicadoLanzaExcepcion() {
         CrearContactoDTO dto = CrearContactoDTO.builder()
-                .nombre("Juan")
-                .apellido("Pérez")
+                .nombre("Juan Pérez")
+                .numero("+34 600 000 000")
                 .email("duplicado@ejemplo.com")
+                .provincia("Madrid")
                 .build();
 
         when(contactoRepository.existsByEmail(dto.getEmail())).thenReturn(true);

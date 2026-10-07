@@ -17,6 +17,6 @@ public interface ContactoRepository extends JpaRepository<Contacto, Long> {
 
     boolean existsByEmailAndIdNot(String email, Long id);
 
-    Page<Contacto> findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCaseOrEmailContainingIgnoreCase(
-            String nombre, String apellido, String email, Pageable pageable);
+    Page<Contacto> findByNombreContainingIgnoreCaseOrEmailContainingIgnoreCaseOrProvinciaContainingIgnoreCaseOrNumeroContainingIgnoreCase(
+            String nombre, String email, String provincia, String numero, Pageable pageable);
 }

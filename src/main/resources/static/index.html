@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de Contactos Pro</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- NAVBAR TOP -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon">
+                <i class="fa-solid fa-address-book"></i>
+            </div>
+            <div>
+                <h1>Agenda <span>Contactos</span></h1>
+                <p class="subtitle">Gestión inteligente y rápida</p>
+            </div>
+        </div>
+
+        <div class="navbar-actions">
+            <div id="user-info" class="user-pill hidden">
+                <i class="fa-solid fa-circle-user"></i>
+                <span id="logged-user-name">Usuario</span>
+            </div>
+            <button id="btn-login-modal" class="btn btn-primary">
+                <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+            </button>
+            <button id="btn-logout" class="btn btn-outline-danger hidden">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-content">
+
+        <!-- BANNER DE LOGIN REQUERIDO CUANDO NO SE HA INICIADO SESIÓN -->
+        <div id="auth-banner" class="alert-banner">
+            <div class="alert-content">
+                <i class="fa-solid fa-lock alert-icon"></i>
+                <div>
+                    <h3>Modo Lectura</h3>
+                    <p>Inicia sesión con tu <strong>Email y Contraseña</strong> para añadir, editar o borrar contactos de la agenda.</p>
+                </div>
+            </div>
+            <button id="btn-banner-login" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-key"></i> Acceder Ahora
+            </button>
+        </div>
+
+        <!-- BARRA DE HERRAMIENTAS: BÚSQUEDA Y NUEVO CONTACTO -->
+        <section class="toolbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" placeholder="Buscar por Nombre, Email, Número o Provincia...">
+                <button id="btn-clear-search" class="btn-icon hidden" title="Limpiar búsqueda">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <button id="btn-new-contact" class="btn btn-success" disabled title="Inicia sesión para añadir contactos">
+                <i class="fa-solid fa-user-plus"></i> Registrar Contacto
+            </button>
+        </section>
+
+        <!-- SECCIÓN DE LISTA DE CONTACTOS -->
+        <section class="contacts-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-users"></i> Lista de Contactos</h2>
+                <span id="contact-counter" class="badge-count">0 contactos</span>
+            </div>
+
+            <!-- Grid de Contactos -->
+            <div id="contacts-grid" class="contacts-grid">
+                <!-- Se rellena dinámicamente desde JS -->
+            </div>
+
+            <!-- Estado Vacío / Sin Resultados -->
+            <div id="empty-state" class="empty-state hidden">
+                <i class="fa-solid fa-address-card empty-icon"></i>
+                <h3>No se encontraron contactos</h3>
+                <p>Intenta cambiar el filtro de búsqueda o registra un nuevo contacto.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL 1: FICHA DE DETALLE DEL CONTACTO (REQUERIDO) -->
+    <div id="modal-ficha" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-id-card"></i> Ficha del Contacto</h3>
+                <button class="modal-close btn-close-ficha"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="ficha-avatar-container">
+                    <div id="ficha-avatar" class="ficha-avatar">A</div>
+                    <div class="ficha-header-text">
+                        <h2 id="ficha-nombre">Nombre Apellido</h2>
+                        <span id="ficha-provincia-badge" class="badge-provincia">Provincia</span>
+                    </div>
+                </div>
+
+                <div class="ficha-details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="fa-solid fa-user"></i> Nombre completo:</span>
+                        <span id="ficha-detail-nombre" class="detail-value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="fa-solid fa-phone"></i> Número de teléfono:</span>
+                        <span id="ficha-detail-numero" class="detail-value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="fa-solid fa-envelope"></i> Correo electrónico:</span>
+                        <span id="ficha-detail-email" class="detail-value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="fa-solid fa-location-dot"></i> Provincia:</span>
+                        <span id="ficha-detail-provincia" class="detail-value">-</span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <span class="detail-label"><i class="fa-solid fa-calendar-days"></i> Fecha de Registro:</span>
+                        <span id="ficha-detail-fecha" class="detail-value">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTONES DENTRO DE LA FICHA (REQUERIDO EXPRESAMENTE POR EL USUARIO) -->
+            <div class="modal-footer ficha-actions">
+                <button id="btn-ficha-back" class="btn btn-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Volver a la lista de contactos
+                </button>
+                <div class="action-buttons-group">
+                    <button id="btn-ficha-edit" class="btn btn-warning">
+                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                    </button>
+                    <button id="btn-ficha-delete" class="btn btn-danger">
+                        <i class="fa-solid fa-trash-can"></i> Borrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FORMULARIO DE LOGIN -->
+    <div id="modal-login" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-lock"></i> Iniciar Sesión</h3>
+                <button class="modal-close btn-close-login"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="form-login">
+                <div class="modal-body">
+                    <div class="demo-box">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <p><strong>Credenciales de Demostración:</strong><br>
+                        Email: <code>admin@agenda.com</code> | Contraseña: <code>admin123</code></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-email"><i class="fa-solid fa-envelope"></i> Email</label>
+                        <input type="email" id="login-email" required placeholder="ejemplo@agenda.com" value="admin@agenda.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password"><i class="fa-solid fa-key"></i> Contraseña</label>
+                        <input type="password" id="login-password" required placeholder="Ingresa tu contraseña" value="admin123">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-close-login">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-right-to-bracket"></i> Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CREAR / EDITAR CONTACTO -->
+    <div id="modal-contacto" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-contacto-title"><i class="fa-solid fa-user-plus"></i> Registrar Contacto</h3>
+                <button class="modal-close btn-close-contacto"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-contacto">
+                <input type="hidden" id="contacto-id">
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-nombre"><i class="fa-solid fa-user"></i> Nombre *</label>
+                        <input type="text" id="input-nombre" required placeholder="Ej: María López">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-numero"><i class="fa-solid fa-phone"></i> Número *</label>
+                        <input type="text" id="input-numero" required placeholder="Ej: +34 612 345 678">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-email"><i class="fa-solid fa-envelope"></i> Email *</label>
+                        <input type="email" id="input-email" required placeholder="Ej: maria.lopez@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-provincia"><i class="fa-solid fa-location-dot"></i> Provincia *</label>
+                        <input type="text" id="input-provincia" required placeholder="Ej: Madrid, Barcelona, Valencia...">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-close-contacto">Cancelar</button>
+                    <button type="submit" class="btn btn-success" id="btn-save-contacto">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Contacto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CONFIRMACIÓN DE BORRADO -->
+    <div id="modal-delete" class="modal-overlay hidden">
+        <div class="modal-card modal-sm">
+            <div class="modal-header text-danger">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> Confirmar Eliminación</h3>
+                <button class="modal-close btn-close-delete"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas borrar a <strong id="delete-contact-name">Contacto</strong>?</p>
+                <p class="text-sm text-muted">Esta acción no se puede deshacer.</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-close-delete">Cancelar</button>
+                <button type="button" id="btn-confirm-delete" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i> Sí, Borrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -24,15 +24,14 @@ public class ContactoServiceImpl implements ContactoService {
     @Transactional
     public ContactoDTO crearContacto(CrearContactoDTO dto) {
         if (contactoRepository.existsByEmail(dto.getEmail())) {
-            throw new BadRequestException("Ya existe un contacto con el email: " + dto.getEmail());
+            throw new BadRequestException("Ya existe un contacto registrado con el email: " + dto.getEmail());
         }
 
         Contacto contacto = Contacto.builder()
                 .nombre(dto.getNombre())
-                .apellido(dto.getApellido())
+                .numero(dto.getNumero())
                 .email(dto.getEmail())
-                .telefono(dto.getTelefono())
-                .direccion(dto.getDireccion())
+                .provincia(dto.getProvincia())
                 .build();
 
         Contacto guardado = contactoRepository.save(contacto);
@@ -57,8 +56,8 @@ public class ContactoServiceImpl implements ContactoService {
     @Transactional(readOnly = true)
     public Page<ContactoDTO> buscarContactos(String query, Pageable pageable) {
         return contactoRepository
-                .findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCaseOrEmailContainingIgnoreCase(
-                        query, query, query, pageable)
+                .findByNombreContainingIgnoreCaseOrEmailContainingIgnoreCaseOrProvinciaContainingIgnoreCaseOrNumeroContainingIgnoreCase(
+                        query, query, query, query, pageable)
                 .map(this::mapToDTO);
     }
 
@@ -78,14 +77,11 @@ public class ContactoServiceImpl implements ContactoService {
         if (dto.getNombre() != null && !dto.getNombre().isBlank()) {
             contacto.setNombre(dto.getNombre());
         }
-        if (dto.getApellido() != null && !dto.getApellido().isBlank()) {
-            contacto.setApellido(dto.getApellido());
+        if (dto.getNumero() != null && !dto.getNumero().isBlank()) {
+            contacto.setNumero(dto.getNumero());
         }
-        if (dto.getTelefono() != null) {
-            contacto.setTelefono(dto.getTelefono());
-        }
-        if (dto.getDireccion() != null) {
-            contacto.setDireccion(dto.getDireccion());
+        if (dto.getProvincia() != null && !dto.getProvincia().isBlank()) {
+            contacto.setProvincia(dto.getProvincia());
         }
 
         Contacto actualizado = contactoRepository.save(contacto);
@@ -104,10 +100,9 @@ public class ContactoServiceImpl implements ContactoService {
         return ContactoDTO.builder()
                 .id(contacto.getId())
                 .nombre(contacto.getNombre())
-                .apellido(contacto.getApellido())
+                .numero(contacto.getNumero())
                 .email(contacto.getEmail())
-                .telefono(contacto.getTelefono())
-                .direccion(contacto.getDireccion())
+                .provincia(contacto.getProvincia())
                 .fechaCreacion(contacto.getFechaCreacion())
                 .fechaActualizacion(contacto.getFechaActualizacion())
                 .build();
