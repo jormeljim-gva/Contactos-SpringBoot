@@ -28,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modals
     const modalLogin = document.getElementById('modal-login');
     const formLogin = document.getElementById('form-login');
+    const btnRegistroModal = document.getElementById('btn-registro-modal');
+    const modalRegistro = document.getElementById('modal-registro');
+    const formRegistro = document.getElementById('form-registro');
+    const linkToRegister = document.getElementById('link-to-register');
+    const linkToLogin = document.getElementById('link-to-login');
 
     const modalContacto = document.getElementById('modal-contacto');
     const formContacto = document.getElementById('form-contacto');
@@ -49,15 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     btnLoginModal.addEventListener('click', () => openModal(modalLogin));
+    btnRegistroModal.addEventListener('click', () => openModal(modalRegistro));
     btnBannerLogin.addEventListener('click', () => openModal(modalLogin));
     btnLogout.addEventListener('click', handleLogout);
 
     document.querySelectorAll('.btn-close-login').forEach(b => b.addEventListener('click', () => closeModal(modalLogin)));
+    document.querySelectorAll('.btn-close-registro').forEach(b => b.addEventListener('click', () => closeModal(modalRegistro)));
     document.querySelectorAll('.btn-close-contacto').forEach(b => b.addEventListener('click', () => closeModal(modalContacto)));
     document.querySelectorAll('.btn-close-ficha').forEach(b => b.addEventListener('click', () => closeModal(modalFicha)));
     document.querySelectorAll('.btn-close-delete').forEach(b => b.addEventListener('click', () => closeModal(modalDelete)));
 
+    linkToRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeModal(modalLogin);
+        openModal(modalRegistro);
+    });
+
+    linkToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeModal(modalRegistro);
+        openModal(modalLogin);
+    });
+
     formLogin.addEventListener('submit', handleLogin);
+    formRegistro.addEventListener('submit', handleRegistro);
     formContacto.addEventListener('submit', handleSaveContacto);
     btnNewContact.addEventListener('click', () => openContactoModal(null));
 
@@ -134,6 +154,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function handleRegistro(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('reg-nombre').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const password = document.getElementById('reg-password').value.trim();
+
+        try {
+            const response = await fetch('/api/v1/auth/registro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre, email, password })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Error al registrar usuario');
+            }
+
+            currentUser = data;
+            localStorage.setItem('agenda_user', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeModal(modalRegistro);
+            formRegistro.reset();
+            showToast(`¡Cuenta creada con éxito! Bienvenido, ${currentUser.nombre}`, 'success');
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
+    }
+
     function handleLogout() {
         currentUser = null;
         localStorage.removeItem('agenda_user');
@@ -145,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentUser) {
             authBanner.classList.add('hidden');
             btnLoginModal.classList.add('hidden');
+            btnRegistroModal.classList.add('hidden');
             btnLogout.classList.remove('hidden');
             userInfo.classList.remove('hidden');
             loggedUserName.textContent = currentUser.nombre;
@@ -156,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             authBanner.classList.remove('hidden');
             btnLoginModal.classList.remove('hidden');
+            btnRegistroModal.classList.remove('hidden');
             btnLogout.classList.add('hidden');
             userInfo.classList.add('hidden');
             btnNewContact.disabled = true;

@@ -35,8 +35,11 @@
                 <i class="fa-solid fa-circle-user"></i>
                 <span id="logged-user-name">Usuario</span>
             </div>
-            <button id="btn-login-modal" class="btn btn-primary">
+            <button id="btn-login-modal" class="btn btn-outline-primary">
                 <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+            </button>
+            <button id="btn-registro-modal" class="btn btn-primary">
+                <i class="fa-solid fa-user-plus"></i> Registrarse
             </button>
             <button id="btn-logout" class="btn btn-outline-danger hidden">
                 <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
@@ -180,12 +183,56 @@
                         <label for="login-password"><i class="fa-solid fa-key"></i> Contraseña</label>
                         <input type="password" id="login-password" required placeholder="Ingresa tu contraseña" value="admin123">
                     </div>
+
+                    <p class="auth-switch-text">
+                        ¿No tienes cuenta? <a href="#" id="link-to-register">Registrarse aquí</a>
+                    </p>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-close-login">Cancelar</button>
                     <button type="submit" class="btn btn-primary">
                         <i class="fa-solid fa-right-to-bracket"></i> Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE REGISTRO DE USUARIOS -->
+    <div id="modal-registro" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-plus"></i> Registrarse como Usuario</h3>
+                <button class="modal-close btn-close-registro"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-registro">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reg-nombre"><i class="fa-solid fa-user"></i> Nombre Completo *</label>
+                        <input type="text" id="reg-nombre" required placeholder="Ej: Juan Pérez">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email"><i class="fa-solid fa-envelope"></i> Correo Electrónico *</label>
+                        <input type="email" id="reg-email" required placeholder="Ej: juan.perez@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password"><i class="fa-solid fa-key"></i> Contraseña (mínimo 6 caracteres) *</label>
+                        <input type="password" id="reg-password" required minlength="6" placeholder="Crea una contraseña segura">
+                    </div>
+
+                    <p class="auth-switch-text">
+                        ¿Ya tienes cuenta? <a href="#" id="link-to-login">Inicia sesión aquí</a>
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-close-registro">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-user-check"></i> Crear Cuenta
                     </button>
                 </div>
             </form>

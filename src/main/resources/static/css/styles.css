@@ -410,6 +410,16 @@ body {
     background-color: var(--danger-hover);
 }
 
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: #a5b4fc;
+}
+.btn-outline-primary:hover:not(:disabled) {
+    background: var(--primary);
+    color: white;
+}
+
 .btn-outline-danger {
     background: transparent;
     border: 1px solid var(--danger);
@@ -418,6 +428,24 @@ body {
 .btn-outline-danger:hover {
     background: var(--danger);
     color: white;
+}
+
+.auth-switch-text {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.auth-switch-text a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.auth-switch-text a:hover {
+    text-decoration: underline;
 }
 
 /* --------------------------------------------------------------------------
